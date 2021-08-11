@@ -42,7 +42,7 @@ class RsocketServiceApplicationTests {
 
     @Test
     void testRequestResponse() {
-        // create a request
+        /* create a request */
         Mono<Response> responseMono = rSocketRequester
                 .route(RSocketController.RSOCKET_ROUTE_REQUEST_RESPONSE)
                 .data(Request.builder()
@@ -51,7 +51,7 @@ class RsocketServiceApplicationTests {
                         .destination(TEST_DESTINATION).build())
                 .retrieveMono(Response.class);
 
-        // Verify that the response message contains the expected data
+        /* Verify that the response message contains the expected data */
         StepVerifier
                 .create(responseMono)
                 .consumeNextWith(response -> {
@@ -105,14 +105,14 @@ class RsocketServiceApplicationTests {
                         .destination(TEST_DESTINATION).build()
         );
 
-        // create the initial request
+        /* create the initial request*/
         Flux<Event> events = rSocketRequester
                 .route(RSocketController.RSOCKET_ROUTE_CHANNEL)
-                .data(requestFlux) // create a flux
+                .data(requestFlux)  
                 .retrieveFlux(Event.class);
 
-        // add a fire and forget request
-        // 
+        /* add a fire and forget request */
+       
         rSocketRequester
                 .route(RSocketController.RSOCKET_ROUTE_FIRE_AND_FORGET)
                 .data(Request.builder().message(FIRE_AND_FORGET_CONTENT))
