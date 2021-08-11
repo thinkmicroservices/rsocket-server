@@ -75,7 +75,7 @@ public class RSocketController {
     Flux<Event> requestStream(RSocketRequester requester, Request request) {
         registerRequester(requester, ConnectionType.REQUEST_STREAM);
         log.info("Received 'request/stream' request: " + request);
-        // create an empty flux
+        /* create an empty flux */
         Flux<Event> responseFlux = Flux.empty();
 
         log.info("client connection count:" + clientConnectionLog.size());
