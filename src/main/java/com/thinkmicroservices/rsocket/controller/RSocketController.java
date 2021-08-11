@@ -104,24 +104,24 @@ public class RSocketController {
      */
     public Flux<Event> channel(RSocketRequester requester, Flux<Request> requestFlux) {
 
-        // add the requester
+        /* add the requester */
         registerRequester(requester, ConnectionType.CHANNEL);
         log.info("Received 'channel' request" + clientConnectionLog.size());
 
-        // create a sink where we can send event messages
+         /* create a sink where we can send event messages*/
         Sinks.Many<Event> sink = Sinks.many().multicast().onBackpressureBuffer();
-        //add the outbound stream to the set
+         
 
-        // add the sink to the list of outbound channels
+        /* add the sink to the list of outbound channels */
         clientOutboundChannels.add(sink);
 
         requestFlux.subscribe(request -> {
 
             log.info("channel processing request:" + request);
 
-            // create an event to send out all connected outbound connections
+            /+ create an event to send out all connected outbound connections */
             Event event = Event.builder().message(request.getMessage()).build();
-            // iterate over the  outbound channels and send each an event
+            /* iterate over the  outbound channels and send each an event */
             clientOutboundChannels.stream().forEach(currentSink -> {
 
                 log.info("send channel event :" + currentSink.name() + ",event: " + event);
@@ -143,7 +143,7 @@ public class RSocketController {
         requester.rsocket()
                 .onClose()
                 .doFirst(() -> {
-                    // Add all new clients to a client list
+                    /* Add all new clients to a client list */
                     log.info("RSocket connected.", requester.rsocketClient().source());
                     clientConnectionLog.add(ConnectionLogEntry.builder()
                             .state(ConnectionState.CONNECTED)
@@ -151,7 +151,7 @@ public class RSocketController {
                             .build());
                 })
                 .doOnError(error -> {
-                    // Warn when channels are closed by clients
+                    /* Warn when channels are closed by clients */
                     log.warn("RSocket error.", requester.rsocketClient().source());
                     clientConnectionLog.add(ConnectionLogEntry.builder()
                             .state(ConnectionState.ERROR)
